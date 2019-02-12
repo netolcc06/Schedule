@@ -65,11 +65,10 @@ class ScheduleNode{
       if(this.end.minutes < 10){
           endMinutes = '0' + endMinutes;
       }
-      var text = '{ start: ' + startHours + ':' + startMinutes + ', end: '+
-                             + endHours + ':' + endMinutes + ' }';
+      var text = '{ "start": ' + '"' + startHours + ':' + startMinutes + '"'  + ', "end": '+
+                               '"'+ endHours + ':' + endMinutes + '"'+ ' }';
       return text;
   }
 }
-
 
 module.exports = ScheduleNode;

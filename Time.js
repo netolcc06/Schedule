@@ -26,5 +26,4 @@ class Time{
   }
 }
 
-
 module.exports = Time;

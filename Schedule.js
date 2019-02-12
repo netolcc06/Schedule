@@ -11,6 +11,9 @@ class Schedule{
         this.Friday = new ScheduleList();
         this.Saturday = new ScheduleList();
         this.Sunday = new ScheduleList();
+        this.rules = [];
+        this.rulesId = [];
+        this.scheduledJson;
     }
 
     getListByDate(dayInTheWeek){
@@ -40,6 +43,19 @@ class Schedule{
                 break;
         }
     }
+
+    listRules(){
+        var returnedJson = '';
+        for(var i = 0; i < this.rules.length; i++){
+            if(i>0){
+                returnedJson = returnedJson + ',';
+            }
+            returnedJson += '{"' + this.rulesId[this.rules[i]]+ '":"' + this.rules[i] + '"}';
+        }
+        returnedJson = '['+ returnedJson +']';
+        return JSON.parse(returnedJson);
+    }
+
     parseRule(rule, ruleId){
         var nodes = [];
         var days = '';
@@ -47,8 +63,9 @@ class Schedule{
         var index = 0;
         var start, end, hours = '', minutes = '';
         var date;
+        this.rules.push(rule);
+        this.rulesId[rule] = ruleId;
         while(index < rule.length){
-            //console.log(rule[index]);
             switch(rule[index]){
                 case '*':
                     index +=1;
@@ -69,14 +86,11 @@ class Schedule{
                         hours+=rule[index];
                         index+=1;
                     }
-                    //console.log("AQUI #1");
                     index+=1;
                     while(rule[index]!=':'){
                         minutes+=rule[index];
                         index+=1;
                     }
-                    //console.log("AQUI #2");
-                    //console.log(hours + 'h' + minutes);
                     start = new Time(parseInt(hours), parseInt(minutes));
                     hours = '';
                     minutes = '';
@@ -85,15 +99,14 @@ class Schedule{
                         hours+=rule[index];
                         index+=1;
                     }
-                    //console.log("AQUI #3");
+
                     index+=1;
 
                     while(index < rule.length && rule[index]!='@'){
                         minutes+=rule[index];
                         index+=1;
                     }
-                    //console.log("AQUI #4");
-                    //console.log(hours + 'h' + minutes);
+
                     end = new Time(parseInt(hours), parseInt(minutes));
                     hours = '';
                     minutes = '';
@@ -156,13 +169,6 @@ class Schedule{
             }
         }
 
-        //for(var i =0; i<10; i++){
-        //    console.log("what");
-        //}
-        //Pra cada dia da semana colocar os nodes de tempo nas listas (cada dia tem uma lista)
-        //console.log(days);
-        //console.log(nodes);
-
         for(var i = 0; i< days.length; i++){
             switch(days[i]){
                 case '2':
@@ -197,8 +203,6 @@ class Schedule{
                     break;
             }
         }
-
-
     }
 
     print(){
@@ -220,13 +224,28 @@ class Schedule{
     }
 
     removeRule(ruleId){
-        this.Monday.removeRule(ruleId);
-        this.Tuesday.removeRule(ruleId);
-        this.Wednesday.removeRule(ruleId);
-        this.Thursday.removeRule(ruleId);
-        this.Friday.removeRule(ruleId);
-        this.Saturday.removeRule(ruleId);
-        this.Sunday.removeRule(ruleId);
+        var indexToBeRemoved = -1;
+        for(var i = 0; i < this.rules.length; i++){
+            if(this.rulesId[this.rules[i]] === ruleId){
+                indexToBeRemoved = i;
+                this.rules.length;
+            }
+        }
+        if(indexToBeRemoved === -1){
+            return("There is not rule with such Id");
+        }
+        else{
+            this.Monday.removeRule(ruleId);
+            this.Tuesday.removeRule(ruleId);
+            this.Wednesday.removeRule(ruleId);
+            this.Thursday.removeRule(ruleId);
+            this.Friday.removeRule(ruleId);
+            this.Saturday.removeRule(ruleId);
+            this.Sunday.removeRule(ruleId);
+            this.rules.splice(indexToBeRemoved, 1);
+            this.rulesId.splice(this.rules[indexToBeRemoved], 1);
+        }
+        return "Rule removed";
     }
     //0123456789
     //25-01-2018 e 29-01-2018
@@ -249,8 +268,12 @@ class Schedule{
         initDate = new Date(parseInt(initYear), parseInt(initMonth)-1, parseInt(initDay));
         endDate = new Date(parseInt(endYear), parseInt(endMonth)-1, parseInt(endDay)+1);//proposito de loop
 
-        var itDate = new Date(parseInt(initYear), parseInt(initMonth)-1, parseInt(initDay));
+        if(initDate >= endDate){
+            return "Initial date >= end date"
+        }
 
+        var itDate = new Date(parseInt(initYear), parseInt(initMonth)-1, parseInt(initDay));
+        var firstDayHasBeenAdded = false;
         while(!(itDate.getDate() === endDate.getDate() && itDate.getMonth() === endDate.getMonth() &&
         itDate.getFullYear() === endDate.getFullYear())){
               var somethingToAdd = false;
@@ -258,50 +281,58 @@ class Schedule{
               var auxString = '';
               dayString = itDate.getDate().toString();
               monthString = itDate.getMonth()+1;
-              //console.log("monthString = " + monthString);
               yearString = itDate.getFullYear().toString();
+
               if(itDate.getDate()<10){
                   dayString = '0'+ dayString;
-                  //console.log("itDate.getDate() = " + itDate.getDate());
               }
-              if(itDate.getMonth()<10)
+              if(itDate.getMonth()<9){
                   monthString = '0'+ monthString;
-              var fullDateString = 'day: ' + '"' + dayString + '-' + monthString + '-' + yearString + '",\n'
+              }
+
+              var fullDateString = '"day": ' + '"' + dayString + '-' + monthString + '-' + yearString + '",\n'
 
               var it = this.getListByDate(itDate.getDay()).getHead();
+              var firstNodeHasBeenFound = false;
               while(it != null){
+                  //var count = 0;
                   if(((!it.isRegular()) && it.getDay().getDate() === itDate.getDate()
                     && it.getDay().getMonth() === itDate.getMonth()
                     && it.getDay().getFullYear() === itDate.getFullYear()) ||
                     it.isRegular()){
-                      somethingToAdd = true;
-                      auxString += it.toString();
-                      if(it != null)
-                          auxString += ', ';
+                        somethingToAdd = true;
+                        if(firstNodeHasBeenFound){
+                            auxString += ', ';
+                        }
+                        auxString += it.toString();
+                        if(!firstNodeHasBeenFound)
+                            firstNodeHasBeenFound = true;
                     }
                   it = it.next;
               }
 
               if(somethingToAdd){
-                  text += fullDateString + "intervals: [" + auxString + "]" +'\n';
+                  if(firstDayHasBeenAdded){
+                      text += ', ';
+                  }
+                  text += '{\n'+ fullDateString + '"intervals": [' + auxString + "]" +'\n}';
+                  if(!firstDayHasBeenAdded)
+                      firstDayHasBeenAdded = true;
               }
-              auxString = '';
               itDate.setDate(itDate.getDate()+1);
-              //console.log(itDate);
         }
 
-        /*employees.push({"firstName":"John", "lastName":"Doe"});
-            //{"firstName":"Anna", "lastName":"Smith"},
-            //{"firstName":"Peter", "lastName":"Jones"}
-        //]
-        var test = 42;
-        /*var text = '{' + "employees" + ': [' +
-                  '{'+ "firstName" +':'+"John" + ',' + "lastName"+':'+"Doe" +'},' +
-                  '{' + "firstName"+':'+"Anna" + ',' + "lastName"+':'+"Smith" + '},' +
-                  '{' + "firstName"+':'+"Peter" + ',' + "lastName"+':'+ test + '}'+ ']}';*/
-                  //day: "25-01-2018",
-                //intervals: [{ start: "14:30", end: "15:00" }, { start: "15:10", end: "15:30" }
-        return '[' + text + ']';
+        text = '[' + text + ']';
+        this.scheduledJson = JSON.parse(text);
+        text = text.replace(/"start"/g, 'start');
+        text = text.replace(/"end"/g, 'end');
+        text = text.replace(/"intervals"/g, 'intervals');
+        text = text.replace(/"day"/g, 'day');
+        return text;
+    }
+
+    getScheduleJson(){
+        return this.scheduledJson;
     }
 }
 
