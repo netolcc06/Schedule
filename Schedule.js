@@ -2,6 +2,7 @@ Time = require('./Time.js');
 ScheduleNode = require('./ScheduleNode.js');
 ScheduleList = require('./ScheduleList.js');
 
+// Builds a list for each day of the week.
 class Schedule{
     constructor(){
         this.Monday = new ScheduleList();
@@ -11,11 +12,15 @@ class Schedule{
         this.Friday = new ScheduleList();
         this.Saturday = new ScheduleList();
         this.Sunday = new ScheduleList();
+        // List of rules
         this.rules = [];
+        // List of rule ids.
         this.rulesId = [];
+        // Json object that represents the schedule.
         this.scheduledJson;
     }
 
+    // Returns the correct list according to the Date.getDay() output.
     getListByDate(dayInTheWeek){
         switch(dayInTheWeek){
             case 0:
@@ -44,6 +49,7 @@ class Schedule{
         }
     }
 
+    // Lists the rules used to create the schedule by returning a json object.
     listRules(){
         var returnedJson = '';
         for(var i = 0; i < this.rules.length; i++){
@@ -56,6 +62,11 @@ class Schedule{
         return JSON.parse(returnedJson);
     }
 
+    // Parses the rule to update the schedule and stores it with its id.
+    // Rule 1 (specific dates) format examle: #26/3/2019@12h00:13h00. Starts with # +  date + @ time interval(s).
+    // Rule 2 (regular dates) format example: *23456SD@14h30:17h00@18h00:19h40. Starts with * + days + @ + time interval(s).
+    // 2 : MONDAY, 3 :  TUESDAY , 4 : WEDNESDAY, 5 : THURSDAY, 6 : FRIDAY, S : SATURDAY, D : SUNNDAY.
+    // You can use W (stands for week) instead of 23456SD.
     parseRule(rule, ruleId){
         var nodes = [];
         var days = '';
@@ -169,6 +180,7 @@ class Schedule{
             }
         }
 
+        // Adds the nodes in the correct list.
         for(var i = 0; i< days.length; i++){
             switch(days[i]){
                 case '2':
@@ -205,6 +217,7 @@ class Schedule{
         }
     }
 
+    // prints the lit for debugging options.
     print(){
         console.log("### MONDAY ###");
         this.Monday.print();
@@ -223,6 +236,8 @@ class Schedule{
         this.Sunday.print();
     }
 
+    // Removes the nodes created by the rule specified by ruleId.
+    // Removes ruleId from the list of ids.
     removeRule(ruleId){
         var indexToBeRemoved = -1;
         for(var i = 0; i < this.rules.length; i++){
@@ -247,8 +262,10 @@ class Schedule{
         }
         return "Rule removed";
     }
-    //0123456789
-    //25-01-2018 e 29-01-2018
+
+    // Returns a string in the specified format for the schedule and saves a json file with it.
+    // The input format is "25-01-2018" e "29-01-2018".
+    // You have to use two digits for each day/month field of the date and four for the year: dd-mm-yyyy
     toJson(firstDate, lastDate){
         if(firstDate.length <10 || lastDate.length < 10)
             return "Invalid input. Correct format: dd-mm-yyyy";

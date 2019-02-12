@@ -20,12 +20,13 @@ class Time{
     return ((this.hours === operand.hours && this.minutes < operand.minutes)
          || (this.hours < operand.hours));
   }
-  // Returns true if the stored time value is least than or equal to the one from the argument operand.
+  // Returns true if the stored time value is less than or equal to the one from the argument operand.
+  // Returns false otherwise.
   leastEqualThan(operand){
     return ((this.hours === operand.hours && this.minutes <= operand.minutes)
          || (this.hours < operand.hours));
   }
-  // Returns true if we compare two times with the same attributes.
+  // Returns true if we compare two times with the same attributes and false otherwise.
   equalsTo(operand){
     return (this.hours === operand.hours && this.minutes === operand.minutes);
   }

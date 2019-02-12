@@ -57,11 +57,12 @@ class ScheduleList{
           var it = this.head;
           var itNext = it.next;
           while(!it.equalsTo(this.tail)){
-              // The new element lies in the middle of the list, but it is going to be inserted
+              // The new element lies between nodes of the list, but it is going to be inserted
               // only if there is not an intersection with the other time intervals.
               // Example: Let's try to add the interval [14h30:15h30] in the following scenarios:
-              // a) [12h00:14h00][15h45:18h00] => OK:element inserted
+              // a) [12h00:14h00][15h45:18h00] => OK:element inserted => [12h00:14h00][14h30:15h30][15h45:18h00]
               // b) [12h00:14h30][15h30:18h00] => OK:element inserted => it fills exactly the available time interval.
+              //  => [12h00:14h30][14h30:15h30][15h30:18h00]
               // c) [12h00:14h40][15h45:18h00] => ERROR:element NOT inserted =>clinic is still full at 14h30.
               if(it.leastThan(node) && node.leastThan(itNext)){
                   node.next = itNext;
@@ -77,7 +78,7 @@ class ScheduleList{
       return true;
   }
 
-  // Removes all the nodes created with the specifief rule.
+  // Removes all the nodes created with the specified rule.
   removeRule(rule){
       if(this.head === null)
           return;
@@ -107,7 +108,7 @@ class ScheduleList{
       // Out of boundary
       if(pos >= this.size)
           return;
-      // Removes the first element and updates the this.head.
+      // Removes the first element and updates this.head.
       if(pos == 0){
         this.head = this.head.next;
         this.size -= 1;
@@ -120,7 +121,7 @@ class ScheduleList{
           this.size -= 1;
       }
       else{
-          // Element is in between head and tail.
+          // Element is between head and tail.
           while(count != pos-1){
               it = it.next;
               count +=1;
