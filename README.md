@@ -48,6 +48,7 @@ The tool presents three basic functionalities:
 
   Visualize the current schedule for a period of time such as http://localhost:8081/schedule/25-10-2018/30-10-2018. Then remove it by calling http://localhost:8081/removerule/0 and try to visualize the same schedule as before.
 
+![alt tag](https://github.com/netolcc06/Schedule/blob/master/scheduleOutput.png)
 
 
 
