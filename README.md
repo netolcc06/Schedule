@@ -3,7 +3,7 @@ Node.js project to administer time intervals available in a given period of time
 
 Run node listsndates.js or node Tests.js for a few hardcoded tests developed while creting its functionalities.
 
-Run node app.js for the server:
+Run node app.js for the server (**it is necessary to download the Express framework**):
 
 http://localhost:8081/rules => lists the rules.
 
