@@ -1,4 +1,8 @@
-
+/**
+ * This class holds a basic structure to handle time.
+ * It stores the hours and minutes for a certain time.
+ * We also define two functions to compare two different times.
+ */
 
 class Time{
 
@@ -7,20 +11,21 @@ class Time{
       this.minutes = minutes;
   }
 
+  // Prints the stored time
   print(){
       console.log(this.hours + 'h' + this.minutes);
   }
-
+  // Returns true if the stored time value is least than the one from the argument operand.
   leastThan(operand){
     return ((this.hours === operand.hours && this.minutes < operand.minutes)
          || (this.hours < operand.hours));
   }
-
+  // Returns true if the stored time value is least than or equal to the one from the argument operand.
   leastEqualThan(operand){
     return ((this.hours === operand.hours && this.minutes <= operand.minutes)
          || (this.hours < operand.hours));
   }
-
+  // Returns true if we compare two times with the same attributes.
   equalsTo(operand){
     return (this.hours === operand.hours && this.minutes === operand.minutes);
   }

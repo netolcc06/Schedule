@@ -1,9 +1,15 @@
+/**
+ * This file contains a few hardcoded tests to observe the code behavior after
+ * each new method implementation.
+ * The most basic structures from the project are tested here - Schedule.
+ */
+
 Time = require('./Time.js');
 ScheduleNode = require('./ScheduleNode.js');
 ScheduleList = require('./ScheduleList.js');
 Schedule = require('./Schedule.js');
 
-
+// Tests the native structure Date.
 d1 = new Date;
 console.log(d1);
 d2 = new Date(2019, 1, 11);
@@ -16,6 +22,7 @@ t1 = new Time(12, 30);
 t2 = new Time(11, 45);
 t3 = new Time(12, 45);
 
+// Tests the basic functions for the Time structure.
 console.log("-----------");
 console.log(t1.leastThan(t2));
 console.log(t2.leastThan(t1));
@@ -31,6 +38,7 @@ e2 = new Time(11, 0);
 s3 = new Time(17,0);
 e3 = new Time(17, 30);
 
+// Creates schedule nodes to be inserted in a ScheduleList.
 sn1 = new ScheduleNode(s1, e1, true, 1);
 sn2 = new ScheduleNode(s2, e2, true, 2);
 sn3= new ScheduleNode(s3, e3, true, 1);

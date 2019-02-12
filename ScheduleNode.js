@@ -1,5 +1,13 @@
 Time = require('./Time.js');
 
+/**
+ * This class holds a basic structure to handle time intervals.
+ * It stores the start hours and minutes, and the end hours and minutes.
+ * We also define two functions to compare two different time intervals.
+ * This is done in order to create an ordered list of time intervals.
+ * With that we can manage time interval lists for each day of the week.
+ */
+
 class ScheduleNode{
 
   constructor(start, end, regular=true, rule = 0){
