@@ -9,9 +9,6 @@ var app = express();
 var fs = require("fs");
 
 var schedule = new Schedule();
-/*schedule.parseRule("*23456SD@14h30:17h00@18h00:19h40", 0);
-schedule.parseRule("*246@08h30:9h00@10h00:10h30", 1);
-schedule.parseRule("#26/3/2019@12h00:13h00", 2);*/
 
 // Lists the rules.
 // url example: http://localhost:8081/rules
