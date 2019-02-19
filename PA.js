@@ -1,5 +1,3 @@
-// counting words
-
 str = "meu nome é josé, seu nome! é ninguém, ninguém é perfeito?";
 
 words = str.replace(/[abc+\,||\!||\?]/g, "").split(" ");
@@ -19,3 +17,21 @@ words.forEach(function(key){
 );
 
 console.log(map);
+
+m = new Map();
+
+/*m.forEach(function(value, key){
+    console.log(key + ' ' + value)
+});*/
+
+//C style
+for(var i = 0; i< words.length; i++){
+    if(m.hasOwnProperty(words[i])){
+        m[words[i]]++;
+    }
+    else{
+        m[words[i]]= 1;
+    }
+}
+
+console.log(m);
